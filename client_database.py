@@ -40,12 +40,66 @@ with st.form("client_form"):
     team_member = st.text_input("Primary Analyst Assigned")
     notes = st.text_area("Notes/Comments")
     nda_status = st.selectbox("NDA Status", ["Executed", "Not Executed", "Unknown"])
-    ai_summary = st.text_area("AI summary")
-    emp_pref = st.text_input("Employee Count Preference")
     industry = st.text_input("Industry Focus")
     geo = st.text_input("Geographic Focus")
     revenue_range = st.text_input("Preferred Revenue Range")
     match_status = st.selectbox("Match Status", ["Not Contacted", "Matched", "Not a Fit", "Archived"])
+    
+    # New fields
+    # st.subheader("🎯 Pipeline & Communication")
+    # st.markdown("---")
+    
+    pipeline_status = st.selectbox(
+        "Pipeline Status",
+        ["Active prospect", "Warm lead", "Cold", "Do not contact"],
+        key="pipeline_status"
+    )
+    
+    # Communication Preference as individual checkboxes
+    comm_options = ["Email", "Phone", "In-person", "Video calls"]
+    communication_preference = []
+    st.markdown("**Communication Preference**")
+    for opt in comm_options:
+        if st.checkbox(opt, key=f"comm_{opt}"):
+            communication_preference.append(opt)
+
+    # Sector Exclusions as individual checkboxes
+    sector_options = ["Gambling", "Tobacco", "Adult content", "Cryptocurrency", "Weapons", "Alcohol", "Other"]
+    sector_exclusions = []
+    st.markdown("**Sector Exclusions**")
+    for opt in sector_options:
+        if st.checkbox(opt, key=f"sector_{opt}"):
+            sector_exclusions.append(opt)
+    
+    deal_pipeline_velocity = st.number_input(
+        "Deal Pipeline Velocity (deals/month)",
+        min_value=1,
+        max_value=50,
+        value=5,
+        help="How many deals per month they want to see",
+        key="deal_pipeline_velocity"
+    )
+    
+    how_they_found_us = st.selectbox(
+        "How They Found Us",
+        ["Referral", "LinkedIn", "Website", "Event", "Cold Outreach", "Other"],
+        help="Track marketing effectiveness",
+        key="how_they_found_us"
+    )
+    
+    revenue_range = st.text_input(
+        "Revenue Range",
+        placeholder="e.g., $100k - $1M, $500k - $5M",
+        help="Essential for micro PE deal matching",
+        key="revenue_range"
+    )
+    
+    next_action_required = st.text_area(
+        "Next Action Required",
+        placeholder="Describe the next action needed to keep team aligned...",
+        help="Keeps team aligned on next steps",
+        key="next_action_required"
+    )
 
     submitted = st.form_submit_button("Submit")
 
@@ -73,12 +127,17 @@ with st.form("client_form"):
             "Primary Analyst Assigned": team_member,
             "Notes/Comments": notes,
             "NDA Status": nda_status,
-            "AI summary": ai_summary,
-            "Employee Count Preference": emp_pref,
             "Industry Focus": industry,
             "Geographic Focus": geo,
             "Preferred Revenue Range": revenue_range,
-            "Match Status": match_status
+            "Match Status": match_status,
+            "Pipeline Status": pipeline_status,
+            "Communication Preference": communication_preference,
+            "Sector Exclusions": sector_exclusions,
+            "Deal Pipeline Velocity": deal_pipeline_velocity,
+            "How They Found Us": how_they_found_us,
+            "Revenue Range": revenue_range,
+            "Next Action Required": next_action_required
         }).execute()
 
         st.success("✅ Client successfully added to Supabase!")
